@@ -1,0 +1,13 @@
+<p>home works!</p>
+<div class="welcome-screen">
+    <img src="./assets/pauwl-logo-full.png" alt="Complete pauwl logo" />
+</div>
+<div class="game-list">
+    @for (room of store.rooms(); track room) {
+        <div class="card">
+              <h5>{{room.name}}</h5>
+              <p><i class="pi pi-user"></i> {{room.players?.length ?? 0}}/10</p>
+              <p-button styleClass="buuton" (onClick)="joinGame(room)" [outlined]="true">Join</p-button>
+        </div>
+    }
+</div>

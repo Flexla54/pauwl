@@ -1,1 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/lara-light-teal/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+.kalam-light {
+  font-family: "Kalam", cursive;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.kalam-regular {
+  font-family: "Kalam", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.kalam-bold {
+  font-family: "Kalam", cursive;
+  font-weight: 700;
+  font-style: normal;
+}
+
+@mixin center($horizontal, $vertical) {
+  display: flex;
+  justify-content: $horizontal;
+  align-items: $vertical;
+}
+
+.card {
+  background: var(--surface-card);
+  border: 1px solid black;
+  border-radius: .5rem;
+  overflow: hidden;
+  padding: 2rem;
+
+  height: fit-content;
+  width: fit-content;
+}

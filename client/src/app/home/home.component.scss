@@ -1,0 +1,23 @@
+@import '../../styles.scss';
+
+.welcome-screen {
+    height: 50vh;
+    margin-inline: auto;
+}
+
+.game-list {
+    width: max(90%, 750px);
+    
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.buuton {
+    font-weight: bold;
+}
