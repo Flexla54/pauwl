@@ -1,9 +1,13 @@
-@import "../../styles.scss";
+@import "../../../styles.scss";
 
 .alignment {
   display: flex;
   flex-direction: column;
   @include center(center, center);
+}
+
+p-button {
+  margin-top: 10px;
 }
 
 .p-button {

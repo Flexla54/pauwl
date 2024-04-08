@@ -5,30 +5,36 @@ import {
   PlayerDto,
   CreatePlayerDto,
   AddPlayerToRoomDto,
+  CreateRoomDto,
 } from '@meme-lib/api-connector';
 import { inject } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
+import { state } from '@angular/animations';
 
 interface AppState {
   rooms: RoomDto[];
   roomsLoading: boolean;
 
-  currentRoom?: RoomDto;
+  currentRoom: RoomDto | undefined;
   currentRoomLoading: boolean;
 
-  player?: PlayerDto;
+  player: PlayerDto | undefined;
   playerLoading: boolean;
 
-  joiningRoom?: RoomDto;
+  joiningRoom: RoomDto | undefined;
 }
 
 const initialState: AppState = {
   rooms: [],
   roomsLoading: false,
 
+  currentRoom: undefined,
   currentRoomLoading: false,
 
+  player: undefined,
   playerLoading: false,
+
+  joiningRoom: undefined,
 };
 
 export const AppStore = signalStore(
@@ -58,6 +64,17 @@ export const AppStore = signalStore(
       );
 
       patchState(store, { player: response, playerLoading: false });
+    },
+    async createRoom(dto: CreateRoomDto) {
+      patchState(store, { currentRoomLoading: true })
+
+      const response = await firstValueFrom(apiService.appControllerCreateRoom(dto));
+
+      patchState(store, {
+        currentRoomLoading: false,
+        currentRoom: response,
+        rooms: [...store.rooms(), response]
+      })
     },
     async joinRoom(dto: AddPlayerToRoomDto) {
       patchState(store, { currentRoomLoading: true });

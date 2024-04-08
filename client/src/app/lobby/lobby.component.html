@@ -1,0 +1,18 @@
+<img class="logo-small" src="./assets/pauwl-logo-small.svg"/>
+
+<h2 class="title">{{debugRoom.name}}</h2>
+<h6 class="title">ID: {{debugRoom.id}}</h6>
+
+<div class="layout">
+    <div class="player-list">
+        <h3>Already in:</h3>
+        <ul>
+            @for (player of debugRoom.players; track player) {
+                <li>{{ player.name }}</li>
+            }
+        </ul>
+    </div>
+    <div class="controls">
+        <p-button (click)="startGame()">Start Game</p-button>
+    </div>
+</div>

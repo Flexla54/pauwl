@@ -1,0 +1,5 @@
+<div class="card alignment">
+  <h5>Enter {{usage}}: </h5>
+  <input type="text" pInputText [placeholder]="placeholder" [formControl]="textControl" />
+  <p-button styleClass="kalam-regular" label="Submit" (onClick)="onNext.emit()"></p-button>
+</div>

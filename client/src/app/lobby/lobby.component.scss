@@ -1,0 +1,39 @@
+.logo-small {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: min(5%, 25px);
+    width: min(30%, 150px);
+
+    z-index: -1;
+}
+
+.title {
+    margin-inline: auto;
+    width: fit-content;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 50vh;
+
+    * {
+        margin: auto;
+    }
+
+    ul {
+        padding: 0;
+    }
+
+    li {
+        text-wrap: nowrap;
+        line-height: 100%;
+        width: 100%;
+        padding: 0.75rem 0 0.75rem 0;
+        list-style-image: url(https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/person/default/24px.svg);
+    & + li {
+        border-top: 1px solid lightgray;
+    }
+    }
+}
