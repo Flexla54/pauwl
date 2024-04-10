@@ -1,0 +1,22 @@
+.container--split {
+    display: grid;
+    grid: 1fr 1fr / 1fr 1fr;
+    gap: 1em;
+    align-items: center;
+    justify-items: center;
+
+    padding: 1em;
+
+    .container__input-area {
+        width: 70%;
+    }
+
+    .container__submit-button {
+        grid-column-start: 1;
+        grid-column-end: -1;
+    }
+
+    .meme {
+        max-width: 100%;
+    }
+}

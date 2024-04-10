@@ -15,16 +15,11 @@ import { Router, RouterModule } from '@angular/router';
 export class HomeComponent {
   public rooms: Signal<RoomDto[]>;
 
-  constructor(public readonly store: AppStore, private router: Router) {
-    this.rooms = store.rooms;
-    effect(() => console.log(store.rooms()));
+  constructor(public readonly store: AppStore) {
+    this.rooms = store.waitingRooms;
   }
 
   ngOnInit() {
     this.store.loadRooms();
-  }
-
-  public joinGame(room: RoomDto) {
-    this.store.saveJoiningRoom(room);
   }
 }

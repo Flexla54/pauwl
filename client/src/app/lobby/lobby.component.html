@@ -1,13 +1,13 @@
 <img class="logo-small" src="./assets/pauwl-logo-small.svg"/>
 
-<h2 class="title">{{debugRoom.name}}</h2>
-<h6 class="title">ID: {{debugRoom.id}}</h6>
+<h2 class="title">{{room()?.name}}</h2>
+<h6 class="title">ID: {{room()?.id}}</h6>
 
 <div class="layout">
     <div class="player-list">
         <h3>Already in:</h3>
         <ul>
-            @for (player of debugRoom.players; track player) {
+            @for (player of room()?.players; track player) {
                 <li>{{ player.name }}</li>
             }
         </ul>

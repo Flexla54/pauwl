@@ -3,7 +3,7 @@
     <p-button styleClass="buuton" [routerLink]="['setup', 'player']">Create Game</p-button>
 </div>
 <div class="game-list">
-    @for (room of store.rooms(); track room) {
+    @for (room of rooms(); track room) {
     <div class="card">
         <h5>{{room.name}}</h5>
         <p><i class="pi pi-user"></i> {{room.players?.length ?? 0}}/10</p>

@@ -2,45 +2,35 @@ import { Component, Signal, effect } from '@angular/core';
 import { AppStore } from '../core/state/app.store';
 import { RoomDto } from '../../../libs/api-connector/src/model/room-dto';
 import { ButtonModule } from 'primeng/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lobby',
   standalone: true,
   imports: [ButtonModule],
   templateUrl: './lobby.component.html',
-  styleUrl: './lobby.component.scss'
+  styleUrl: './lobby.component.scss',
 })
 export class LobbyComponent {
-  public room: Signal<RoomDto | undefined> | undefined;
-  public debugRoom: RoomDto = {
-    id: '123456-1234-1234-12345678',
-    name: 'michaels mediocre mansion',
-    rounds: [],
-    numberOfRounds: 5,
-    status: 'WAITING',
-    players: [
-      {
-        id: '111111-1111-1111-11111111',
-        name: 'Michael',
-        avatarUrl: 'https://avatars.githubusercontent.com/u/11111111'
-      },
-      {
-        id: '222222-2222-2222-22222222',
-        name: 'Stevens',
-        avatarUrl: 'https://avatars.githubusercontent.com/u/22222222'
-      }
-    ]
-  }
+  public room: Signal<RoomDto | undefined>;
 
-  constructor(public readonly store: AppStore) {
+  constructor(
+    public readonly store: AppStore,
+    private readonly router: Router
+  ) {
     this.room = store.currentRoom;
-    effect(() => console.log(store.rooms()));
+    effect(() => this.room() == null && this.router.navigate(['']));
+
+    effect(() => {
+      if (this.room()?.status === 'START') {
+        this.router.navigate(['editor']);
+      }
+    });
 
     store.streamUpdates();
   }
 
   public startGame() {
-    //TODO: implement
-    alert('Totally starting the game right now ;)');
+    this.store.startGame();
   }
 }

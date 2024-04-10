@@ -1,0 +1,12 @@
+<img class="logo-small" src="./assets/pauwl-logo-small.svg" />
+
+@if (!alreadyAnsweredCurrentRound()) {
+<h2 class="title">Caption This!</h2>
+<div class="container--split">
+    <img class="meme" src="<something>/api/meme?memeUrl={{ currentRound()?.memeUrl }}" />
+    <textarea [formControl]="captionControl" pInputTextarea class="container__input-area"></textarea>
+<p-button (click)="submit()" class="container__submit-button">Submit</p-button>
+</div>
+} @else {
+    <em>You already submitted your answer!</em>
+}

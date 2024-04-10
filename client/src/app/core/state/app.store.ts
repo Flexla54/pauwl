@@ -1,4 +1,10 @@
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withMethods,
+  withState,
+} from '@ngrx/signals';
 import {
   RoomDto,
   APIsService,
@@ -6,10 +12,13 @@ import {
   CreatePlayerDto,
   AddPlayerToRoomDto,
   CreateRoomDto,
+  BASE_PATH,
 } from '@meme-lib/api-connector';
-import { inject } from '@angular/core';
-import { Observable, firstValueFrom } from 'rxjs';
+import { computed, inject } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 import { state } from '@angular/animations';
+
+const BASE_URL = '<something>';
 
 interface AppState {
   rooms: RoomDto[];
@@ -22,6 +31,8 @@ interface AppState {
   playerLoading: boolean;
 
   joiningRoom: RoomDto | undefined;
+
+  roomStream: EventSource | undefined;
 }
 
 const initialState: AppState = {
@@ -35,11 +46,44 @@ const initialState: AppState = {
   playerLoading: false,
 
   joiningRoom: undefined,
+
+  roomStream: undefined,
+};
+
+const getCurrentRoundId = (room: RoomDto | undefined) => {
+  const numberOfParticipants = room?.players?.length ?? 1;
+  console.log('numberOfParticipants', numberOfParticipants);
+
+  return room?.rounds.findIndex((r) => {
+    console.log(r);
+    return (r.answers?.length ?? 0) < numberOfParticipants;
+  });
 };
 
 export const AppStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
+  withComputed(({ rooms, currentRoom, player }) => ({
+    waitingRooms: computed(() => rooms().filter((r) => r.status === 'WAITING')),
+    currentRoundId: computed(() => getCurrentRoundId(currentRoom())),
+    currentRound: computed(() => {
+      const currentRoundId = getCurrentRoundId(currentRoom());
+
+      return currentRoundId === undefined
+        ? undefined
+        : currentRoom()?.rounds[currentRoundId];
+    }),
+    submittedAnswerForCurrentRound: computed(() => {
+      const currentRoundId = getCurrentRoundId(currentRoom());
+      console.log(currentRoundId);
+
+      return currentRoundId === undefined
+        ? true
+        : currentRoom()?.rounds[currentRoundId].answers?.some(
+            (a) => a.playerId === player()?.id
+          ) ?? true;
+    }),
+  })),
   withMethods((store, apiService = inject(APIsService)) => ({
     saveJoiningRoom(room: RoomDto) {
       patchState(store, { joiningRoom: room });
@@ -66,15 +110,17 @@ export const AppStore = signalStore(
       patchState(store, { player: response, playerLoading: false });
     },
     async createRoom(dto: CreateRoomDto) {
-      patchState(store, { currentRoomLoading: true })
+      patchState(store, { currentRoomLoading: true });
 
-      const response = await firstValueFrom(apiService.appControllerCreateRoom(dto));
+      const response = await firstValueFrom(
+        apiService.appControllerCreateRoom(dto)
+      );
 
       patchState(store, {
         currentRoomLoading: false,
         currentRoom: response,
-        rooms: [...store.rooms(), response]
-      })
+        rooms: [...store.rooms(), response],
+      });
     },
     async joinRoom(dto: AddPlayerToRoomDto) {
       patchState(store, { currentRoomLoading: true });
@@ -89,16 +135,63 @@ export const AppStore = signalStore(
         joiningRoom: undefined,
       });
     },
-    async startGame() {
-      const roomId = store.currentRoom?.()?.id;
+    async streamUpdates() {
+      if (store.roomStream() !== undefined) {
+        return;
+      }
 
-      const test = apiService.appControllerSse(roomId!);
+      const roomId = store.currentRoom()?.id;
 
       if (!roomId) {
         return;
       }
 
-      patchState(store, { currentRoomLoading: true });
+      const eventSource = new EventSource(
+        `${BASE_URL}/api/sse?roomId=${roomId}`
+      );
+
+      eventSource.onmessage = (event) => {
+        const jsonData = JSON.parse(event.data) as RoomDto;
+
+        console.log('new room', jsonData);
+        patchState(store, { currentRoom: jsonData });
+      };
+
+      eventSource.onerror = () => {
+        console.error('The live connection to the server was aborted!');
+        patchState(store, { roomStream: undefined });
+      };
+
+      patchState(store, { roomStream: eventSource });
+    },
+    async startGame() {
+      const roomId = store.currentRoom()?.id;
+
+      if (roomId) {
+        await firstValueFrom(apiService.appControllerStartGame({ roomId }));
+      }
+    },
+    async submitAnswer(caption: string) {
+      const playerId = store.player()?.id;
+      const roomId = store.currentRoom()?.id;
+      const roundId = store.currentRoundId();
+
+      if (
+        playerId == undefined ||
+        roomId == undefined ||
+        roundId == undefined
+      ) {
+        return;
+      }
+
+      await firstValueFrom(
+        apiService.appControllerSubmitAnswer({
+          answer: caption,
+          playerId,
+          roomId,
+          round: roundId,
+        })
+      );
     },
   }))
 );

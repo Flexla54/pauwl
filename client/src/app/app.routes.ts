@@ -5,6 +5,7 @@ import { InputCardComponent } from './components/input-card/input-card.component
 import { CreatePlayerComponent } from './create-player/create-player.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { CreateRoomComponent } from './create-room/create-room.component';
+import { EditorComponent } from './editor/editor.component';
 
 export const routes: Routes = [
   {
@@ -31,5 +32,9 @@ export const routes: Routes = [
   {
     path: 'lobby',
     component: LobbyComponent
+  },
+  {
+    path: 'editor',
+    component: EditorComponent,
   }
 ];
