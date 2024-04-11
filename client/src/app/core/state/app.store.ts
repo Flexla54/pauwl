@@ -83,6 +83,29 @@ export const AppStore = signalStore(
             (a) => a.playerId === player()?.id
           ) ?? true;
     }),
+    previousRound: computed(() => {
+      const currentRoundId = getCurrentRoundId(currentRoom());
+
+      if (!currentRoundId) {
+        return undefined;
+      }
+
+      return currentRoom()?.rounds[currentRoundId - 1];
+    }),
+    allVoted: computed(() => {
+      const currentRoundId = getCurrentRoundId(currentRoom());
+
+      if (!currentRoundId) {
+        return true;
+      }
+
+      const previousRound = currentRoom()?.rounds[currentRoundId - 1];
+
+      return (
+        previousRound?.answers?.reduce((p, c) => p + c.score, 0) ==
+          currentRoom()?.players?.length ?? true
+      );
+    }),
   })),
   withMethods((store, apiService = inject(APIsService)) => ({
     saveJoiningRoom(room: RoomDto) {
@@ -190,6 +213,20 @@ export const AppStore = signalStore(
           playerId,
           roomId,
           round: roundId,
+        })
+      );
+    },
+    async submitVote(answerId: string) {
+      const roomId = store.currentRoom()?.id;
+
+      if (roomId == undefined) {
+        return;
+      }
+
+      await firstValueFrom(
+        apiService.appControllerVoteAnswer({
+          answerId,
+          roomId,
         })
       );
     },

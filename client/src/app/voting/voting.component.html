@@ -1,0 +1,17 @@
+<img class="logo-small" src="./assets/pauwl-logo-small.svg" />
+
+@if (!alreadyVoted) {
+    <h1 class="title">Vote off!</h1>
+
+    @for (answer of previousRound()?.answers; track answer) {
+        <div class="candidate">
+            <div class="candidate__preview">
+                <h2 class="caption">{{answer.text}}</h2>
+                <img class="meme" src="<url>?memeUrl={{ previousRound()?.memeUrl }}" />
+            </div>
+            <p-button (onClick)="submitVote(answer.anserId)" class="candidate__button">Winner</p-button>
+        </div>
+    }
+} @else {
+    <em>You already submitted your vote!</em>
+}

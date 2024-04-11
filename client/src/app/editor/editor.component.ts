@@ -10,6 +10,9 @@ import { CommonModule } from '@angular/common';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { distinct, filter, map, skip, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-editor',
@@ -29,13 +32,25 @@ export class EditorComponent {
   public readonly alreadyAnsweredCurrentRound: Signal<boolean>;
   public readonly captionControl = new FormControl('', [Validators.required]);
 
-  constructor(private readonly store: AppStore) {
+  constructor(
+    private readonly store: AppStore,
+    private readonly router: Router
+  ) {
     this.currentRound = store.currentRound;
     this.alreadyAnsweredCurrentRound = store.submittedAnswerForCurrentRound;
     effect(() => console.log(this.store.currentRoom())); // This is needed as i am too dumb to use signals
     // Elaboration: The submittedAnswerForCurrentRound signal is not updated until some user interaction is recorded
     //              I do not know why this is the case, the UI should subscribed to this anyways as it is a computed
     //              signal. However, simply creating an effect on the currentRoom fixes this issues :shrug:
+
+    toObservable(this.currentRound)
+      .pipe(
+        map((v) => v?.memeUrl),
+        tap(console.log),
+        distinct(),
+        skip(1)
+      )
+      .subscribe(() => this.router.navigateByUrl('/voting'));
   }
 
   public submit() {

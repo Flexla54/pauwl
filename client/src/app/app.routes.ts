@@ -6,6 +6,7 @@ import { CreatePlayerComponent } from './create-player/create-player.component';
 import { LobbyComponent } from './lobby/lobby.component';
 import { CreateRoomComponent } from './create-room/create-room.component';
 import { EditorComponent } from './editor/editor.component';
+import { VotingComponent } from './voting/voting.component';
 
 export const routes: Routes = [
   {
@@ -25,16 +26,20 @@ export const routes: Routes = [
       },
       {
         path: 'room',
-        component: CreateRoomComponent
-      }
-    ]
+        component: CreateRoomComponent,
+      },
+    ],
   },
   {
     path: 'lobby',
-    component: LobbyComponent
+    component: LobbyComponent,
   },
   {
     path: 'editor',
     component: EditorComponent,
-  }
+  },
+  {
+    path: 'voting',
+    component: VotingComponent,
+  },
 ];

@@ -1,0 +1,20 @@
+.candidate {
+    display: grid;
+    grid: 1fr 1fr / 1fr 1fr;
+    gap: 1ewm;
+    align-items: center;
+    justify-items: center;
+
+    padding: 1em;
+
+    .meme {
+        max-width: 100%;
+    }
+
+    .candidate__button {
+        grid-row-start: 1;
+        grid-row-end: -1;
+
+        grid-column-start: 2;
+    }
+}
