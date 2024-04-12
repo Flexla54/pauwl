@@ -1,2 +1,17 @@
-<h1>This is where the ranking will be</h1>
-<p>Bli bla blu</p>
+<img class="logo-small" src="./assets/pauwl-logo-small.svg"/>
+
+<h1 class="title">Results</h1>
+<div class="content">
+    <ol class="ranking">
+        @for (player of ranking(); track player) {
+            <li class="player-image">
+                <img src="/api/avatars/{{player!.avatarUrl}}" />
+                <h3>{{player!.name}}</h3>
+            </li>
+        }
+    </ol>
+
+    <div class="controls">
+        <p-button [routerLink]="['/']" styleClass="kalam-regular" label="Leave"></p-button>
+    </div>
+</div>

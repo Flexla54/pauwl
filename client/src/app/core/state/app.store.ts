@@ -84,7 +84,7 @@ export const AppStore = signalStore(
       let currentRoundId = getCurrentRoundId(currentRoom());
 
       if (currentRoundId == -1) {
-        currentRoundId = (currentRoom()?.numberOfRounds ?? 4) ;
+        currentRoundId = currentRoom()?.numberOfRounds ?? 4;
       }
 
       if (!currentRoundId) {
@@ -106,6 +106,24 @@ export const AppStore = signalStore(
         previousRound?.answers?.reduce((p, c) => p + c.score, 0) ==
           currentRoom()?.players?.length ?? true
       );
+    }),
+    ranking: computed(() => {
+      const users = {} as { [k: string]: number };
+
+      for (const round of currentRoom()?.rounds ?? []) {
+        for (const answer of round.answers ?? []) {
+          if (Object.hasOwn(users, answer.playerId)) {
+            users[answer.playerId] += answer.score;
+          } else {
+            users[answer.playerId] = answer.score;
+          }
+        }
+      }
+
+      return Object.entries(users)
+        .sort((a, b) => b[1] - a[1])
+        .map((u) => u[0])
+        .map((id) => currentRoom()?.players?.find((p) => p.id === id));
     }),
   })),
   withMethods((store, apiService = inject(APIsService)) => ({

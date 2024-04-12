@@ -1,0 +1,39 @@
+@import "../../styles.scss";
+
+.logo-small {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: min(5%, 25px);
+    width: min(30%, 150px);
+
+    z-index: -1;
+}
+
+.title {
+    margin-inline: auto;
+    width: fit-content;
+}
+
+.content{
+    display: grid;
+    grid: 1fr 1fr / 1fr;
+    
+    @include center(center, center);
+}
+
+.controls{
+    margin: 1rem;
+}
+
+@media only screen and (min-width: 650px) {
+    .controls {
+        height: 80vh;
+        @include center(center, center);
+    }
+    .content {
+        display: grid;
+        grid: 1fr / 1fr 1fr;
+        align-items: center;
+    }
+}

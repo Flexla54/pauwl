@@ -1,6 +1,18 @@
+.logo-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h2 {
+    width: 100%;
+    text-align: center;
+}
+
 .container--split {
     display: grid;
-    grid: 1fr 1fr / 1fr 1fr;
+    grid: 1fr 4em / 1fr 1fr;
     gap: 1em;
     align-items: center;
     justify-items: center;
@@ -18,5 +30,6 @@
 
     .meme {
         max-width: 100%;
+        max-height: 50vh;
     }
 }

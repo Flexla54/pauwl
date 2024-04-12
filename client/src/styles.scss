@@ -3,6 +3,7 @@
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 
+
 .kalam-light {
   font-family: "Kalam", cursive;
   font-weight: 300;
@@ -36,4 +37,10 @@
 
   height: fit-content;
   width: fit-content;
+}
+
+@mixin center($horizontal, $vertical) {
+  display: flex;
+  justify-content: $horizontal;
+  align-items: $vertical;
 }
