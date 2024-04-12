@@ -7,6 +7,7 @@ import { LobbyComponent } from './lobby/lobby.component';
 import { CreateRoomComponent } from './create-room/create-room.component';
 import { EditorComponent } from './editor/editor.component';
 import { VotingComponent } from './voting/voting.component';
+import { RankingComponent } from './ranking/ranking.component';
 
 export const routes: Routes = [
   {
@@ -42,4 +43,8 @@ export const routes: Routes = [
     path: 'voting',
     component: VotingComponent,
   },
+  {
+    path: 'ranking',
+    component: RankingComponent,
+  }
 ];
