@@ -52,10 +52,8 @@ const initialState: AppState = {
 
 const getCurrentRoundId = (room: RoomDto | undefined) => {
   const numberOfParticipants = room?.players?.length ?? 1;
-  console.log('numberOfParticipants', numberOfParticipants);
 
   return room?.rounds.findIndex((r) => {
-    console.log(r);
     return (r.answers?.length ?? 0) < numberOfParticipants;
   });
 };
@@ -75,7 +73,6 @@ export const AppStore = signalStore(
     }),
     submittedAnswerForCurrentRound: computed(() => {
       const currentRoundId = getCurrentRoundId(currentRoom());
-      console.log(currentRoundId);
 
       return currentRoundId === undefined
         ? true
@@ -84,7 +81,11 @@ export const AppStore = signalStore(
           ) ?? true;
     }),
     previousRound: computed(() => {
-      const currentRoundId = getCurrentRoundId(currentRoom());
+      let currentRoundId = getCurrentRoundId(currentRoom());
+
+      if (currentRoundId == -1) {
+        currentRoundId = (currentRoom()?.numberOfRounds ?? 4) ;
+      }
 
       if (!currentRoundId) {
         return undefined;
@@ -176,7 +177,6 @@ export const AppStore = signalStore(
       eventSource.onmessage = (event) => {
         const jsonData = JSON.parse(event.data) as RoomDto;
 
-        console.log('new room', jsonData);
         patchState(store, { currentRoom: jsonData });
       };
 

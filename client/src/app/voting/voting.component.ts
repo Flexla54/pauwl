@@ -27,6 +27,11 @@ export class VotingComponent {
       if (this.store.allVoted()) {
         this.router.navigateByUrl('/editor');
       }
+
+      console.log(this.store.currentRoom()?.rounds)
+      if (this.store.currentRoom()?.rounds.every(r => r.answers?.reduce((p, c) => p + c.score, 0) === this.store.currentRoom()?.players?.length)) {
+        this.router.navigateByUrl("/winner");
+      }
     });
   }
 
